@@ -60,7 +60,6 @@ def show_psd(data_mne, fmin=0, fmax=np.inf):
     """
     spectrum = data_mne.compute_psd(fmin=fmin, fmax=fmax)
     spectrum.plot()
-    spectrum.plot_topo(block=True) # Must plot another graph because vanilla plot does not have block parameter 
 
 
 def filter_band_pass(data_mne, band_start=BAND_START, band_stop=BAND_STOP):
@@ -86,6 +85,8 @@ if __name__ == "__main__":
     data_df = lab2.load_recording_file("eyes_open_4.txt")
     data_mne = construct_mne(data_df)
     show_psd(data_mne)
+    data_mne.plot(block=True) # Must plot another graph because vanilla plot does not have block parameter 
+
     # get_eeg_as_numpy_array(data_df)
 
     # print(get_eeg_as_numpy_array(data_df))
