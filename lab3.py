@@ -49,7 +49,7 @@ def construct_mne(data_df):
     return raw
 
 
-def show_psd(data_mne, fmin=0, fmax=np.inf):
+def show_psd(data_mne, fmin=0, fmax=np.inf, channel="all"):
     """ Plots the power spectral density of the EEG signals in
     <data_mne>, limiting the range of the horizontal axis of the plot to
     [fmin, fmax].
@@ -57,9 +57,10 @@ def show_psd(data_mne, fmin=0, fmax=np.inf):
     data_mne: MNE Raw object
     fmin: lower end of horizontal axis range
     fmax: upper end of horizontal axis range
+    channel: channel to plot
     """
-    spectrum = data_mne.compute_psd(fmin=fmin, fmax=fmax)
-    spectrum.plot()
+    spectrum = data_mne.compute_psd(fmin=fmin, fmax=fmax, picks=channel)
+    spectrum.plot(picks=channel)
 
 
 def filter_band_pass(data_mne, band_start=BAND_START, band_stop=BAND_STOP):
