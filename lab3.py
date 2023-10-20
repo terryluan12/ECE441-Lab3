@@ -1,6 +1,7 @@
 import numpy as np
 import mne
 import lab2
+import time
 
 ELECTRODE_NAMES = ['FP1', 'FP2', 'C3', 'C4', 'P7', 'P8', 'O1', 'O2']
 ELECTRODE_MONTAGE = {
@@ -39,11 +40,10 @@ def construct_mne(data_df):
     data_df: a pandas dataframe, with format as defined by the return
     value of lab2.load_recording_file
     """
-    column_names = [name for name in data_df.columns if lab2.is_eeg(name) ]
 
-    mneInfo = mne.create_info(column_names, lab2.SAMPLE_RATE)
+    mneInfo = mne.create_info(ch_names=ELECTRODE_NAMES, sfreq=lab2.SAMPLE_RATE, ch_types="eeg")
     raw = mne.io.RawArray(get_eeg_as_numpy_array(data_df), mneInfo)
-    montage = mne.channels.make_dig_montage(ELECTRODE_MONTAGE)
+    montage = mne.channels.make_dig_montage(ch_pos=ELECTRODE_MONTAGE, coord_frame='head')
     raw.set_montage(montage)
 
     return raw
@@ -58,7 +58,9 @@ def show_psd(data_mne, fmin=0, fmax=np.inf):
     fmin: lower end of horizontal axis range
     fmax: upper end of horizontal axis range
     """
-    data_mne.compute_psd(fmin=fmin, fmax=fmax)
+    spectrum = data_mne.compute_psd(fmin=fmin, fmax=fmax)
+    spectrum.plot()
+    spectrum.plot_topo(block=True) # Must plot another graph because vanilla plot does not have block parameter 
 
 
 def filter_band_pass(data_mne, band_start=BAND_START, band_stop=BAND_STOP):
@@ -83,7 +85,7 @@ def filter_notch_60(data_mne):
 if __name__ == "__main__":
     data_df = lab2.load_recording_file("eyes_open_4.txt")
     data_mne = construct_mne(data_df)
-    # show_psd(data_mne)
+    show_psd(data_mne)
     # get_eeg_as_numpy_array(data_df)
 
     # print(get_eeg_as_numpy_array(data_df))
