@@ -69,7 +69,7 @@ def filter_band_pass(data_mne, band_start=BAND_START, band_stop=BAND_STOP):
 
     data_mne: MNE Raw object
     """
-    pass  # TODO: replace this with your code
+    return data_mne.filter(l_freq=band_start, h_freq=band_stop)
 
 
 def filter_notch_60(data_mne):
@@ -78,13 +78,17 @@ def filter_notch_60(data_mne):
 
     data_mne: MNE Raw object
     """
-    pass  # TODO: replace this with your code
+    return data_mne.notch_filter(freqs=60)
 
 
 if __name__ == "__main__":
-    data_df = lab2.load_recording_file("eyes_open_4.txt")
+    data_df = lab2.load_recording_file("eyes_closed_1.txt")
     data_mne = construct_mne(data_df)
-    show_psd(data_mne)
+    filtered_data_mne = filter_band_pass(data_mne, 0, 40)
+    notched_data_mne = filter_notch_60(data_mne)
+    show_psd(filtered_data_mne)
+
+    
     data_mne.plot(block=True) # Must plot another graph because vanilla plot does not have block parameter 
 
     # get_eeg_as_numpy_array(data_df)
