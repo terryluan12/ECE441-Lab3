@@ -4,7 +4,7 @@ import time
 
 from brainflow.data_filter import DataFilter, DetrendOperations, WindowOperations
 
-def calculate_alpha_beta_ratio(port='COM6'):
+def calculate_alpha_beta_ratio(port='COM7'):
     boardID=bf.BoardIds.CYTON_BOARD
     boardDescr = bf.BoardShim.get_board_descr(boardID)
     sampleRate=boardDescr['sampling_rate']
@@ -20,7 +20,9 @@ def calculate_alpha_beta_ratio(port='COM6'):
     time.sleep(2)
 
     data=board1.get_board_data()
-    channels=boardDescr['eeg_channels']
+    #channels=boardDescr['eeg_channels']
+    channels=[1,2]
+    print(channels)
     alpha_beta=np.zeros(len(channels))
 
     for count, channel in enumerate(channels):
